@@ -31,9 +31,9 @@ public class Spreadsheet implements Grid
 			{"----------", "--------------------", "---------------------------------------------", "------"},
 			{"<expr>", "     Expression     ", "Explanation of different types of expressions", "\"<text>\" is a text value - must be surrounded by quotes\n\t\t<value> is a numerical value - do not surround by anything.\n\t\t<perc>% is a percentage - do not surround by anything but add percent sign to end\n\t\t( <formula> ) is a mathematical expression - see 'help <formula>'"},
 			{"<text>", "\"<text>\"", "Plain text cell - can store anything", "Cell that simply holds a text value. Cannot do computations. Indicate text by surrounding with quotes"},
-			{"*<value>", "<value>", "Plain numerical value", "Stores a number, can be a decimal. Can be used in computations"},
-			{"*<perc>", "<perc>%", "Percent value", "Stores a percent of something. Stored as decimal, printed as percentage."},
-			{"*<formula>","( <formula> )", "Mathematical formula", "A mathematical formula. Can reference other cells and use +, -, *, /, avg, sum. See 'help avg' or 'help sum'."},
+			{"<value>", "<value>", "Plain numerical value", "Stores a number, can be a decimal. Can be used in computations"},
+			{"<perc>", "<perc>%", "Percent value", "Stores a percent of something. Stored as decimal, printed as percentage."},
+			{"*<formula>","( <formula> )", "Mathematical formula", "A mathematical formula that is either arithmetic or a range function.\n\t\tArithmetic: Can use +, -, *, / combined with numbers and cell references. Evaluates left-to-right.\n\t\tRange function: Can be either 'sum' or 'svg' with nothing else in it. See 'help avg' or 'help sum' for info about the 2 functions.\n\t\tOperators and functions MUST be separated by spaces."},
 			{"*avg", "avg <cell>-<cell>", "Calculate average in formula", "Given a range of cells, calculates the average value of all value, percent, and other formula cells."},
 			{"*sum", "sum <cell>-<cell>", "Calculates sum in formula", "Given a range of cells, calculates the sum of all value, percentage, and other formula cells"}
 	};
@@ -77,7 +77,6 @@ public class Spreadsheet implements Grid
 			return "";
 		}
 
-
 		// Process non-assignment commands
 		if (command.toLowerCase().startsWith("quit")) {
 			return ""; // Main loop will terminate after this
@@ -91,8 +90,7 @@ public class Spreadsheet implements Grid
 		if (command.toLowerCase().startsWith("print")) {
 			return toString();
 		}
-
-
+		// Process cell assignment commands
 		return processCellAssignment(command);
 
 	}
@@ -109,45 +107,67 @@ public class Spreadsheet implements Grid
 		command = command.trim();
 
 		// Try to resolve cell name - if fails, must be invalid
+		Cell cell;
+		SpreadsheetLocation cellLoc;
 		try {
 			// Skip substring if command is not long enough. SpreadsheetLocation fails if invalid cell name
-			SpreadsheetLocation cellLoc;
 			if (command.length() <= 2) {
 				cellLoc = new SpreadsheetLocation(command);
 			} else {
 				cellLoc = new SpreadsheetLocation(command.substring(0, 3).trim());
 			}
 			// Fails if cell location doesn't exist on spreadsheet
-			Cell cell = getCell(cellLoc);
+			cell = getCell(cellLoc);
 
-			// If cell is the only thing in the command, print cell text
-			if (command.length() <= 3) {
-				// Skip loop execution if equals is at index 2, so A4="hi" won't print out cell but assign properly
-				if (command.length() == 2 || command.charAt(2) != '=')
-					return cell.fullCellText();
-			}
+		} catch (Exception e) {
+			return "ERROR: Invalid command or invalid cell name.";
+		}
 
-			// Split at = sign to try to get assignment value
-			String[] splitCommand = command.split("=", 2);
-			if (splitCommand.length != 2) {
-				return "ERROR: Invalid command."; // No equals sign exists
-			}
-			String assignStatement = splitCommand[1].trim();
-			// Check if string starts with straight or curly double quote and ends with straight or curly double quote
-			if ( (assignStatement.startsWith("\"") || assignStatement.startsWith("“"))
-					&& (assignStatement.endsWith("\"") || assignStatement.endsWith("”")) ) {
+		// If cell is the only thing in the command, print cell text
+		if (command.length() <= 3) {
+			// Skip loop execution if equals is at index 2, so A4="hi" won't print out cell but assign properly
+			if (command.length() == 2 || command.charAt(2) != '=')
+				return cell.fullCellText();
+		}
+
+		// Split at = sign to try to get assignment value
+		String[] splitCommand = command.split("=", 2);
+		if (splitCommand.length != 2) {
+			return "ERROR: Invalid command."; // No equals sign exists
+		}
+		String assignStatement = splitCommand[1].trim();
+		Cell newCell;
+
+		// Throw error if assignment expression is invalid
+		try {
+
+			// Check if string starts and ends with either type of double quote --> text
+			if ((assignStatement.startsWith("\"") || assignStatement.startsWith("“"))
+					&& (assignStatement.endsWith("\"") || assignStatement.endsWith("”"))) {
 				// Create new cell with text, not including quotes
-				Cell newCell = new TextCell(assignStatement.substring(1, assignStatement.length() - 1));
-				cells[cellLoc.getRow()][cellLoc.getCol()] = newCell;
-				return toString();
+				newCell = new TextCell(assignStatement.substring(1, assignStatement.length() - 1));
+
+			// Check if string starts and ends with () --> formula
+			} else if (assignStatement.startsWith("(") && assignStatement.endsWith(")")) {
+				// Create new cell with formula
+				newCell = new FormulaCell(assignStatement);
+
+			// Check if string ends in % --> percent
+			} else if (assignStatement.endsWith("%")) {
+				newCell = new PercentCell(assignStatement);
+
+			// If reached here, assignment must be value or invalid
+			} else {
+				newCell = new ValueCell(assignStatement);
 			}
+
 
 
 		} catch (Exception e) {
-			return "ERROR: Invalid command.";
+			return "ERROR: assignment expression is invalid: " + e;
 		}
-		// If reached here, no format matched, so must be invalid
-		return "ERROR: Invalid command.";
+		cells[cellLoc.getRow()][cellLoc.getCol()] = newCell;
+		return toString();
 	}
 
 	// Process base history command

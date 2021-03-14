@@ -9,6 +9,8 @@ package textExcel;
 
 //Update this file with your own code.
 
+import java.util.Objects;
+
 public class SpreadsheetLocation implements Location {
     private int rowIndex;
     private int colIndex;
@@ -49,4 +51,20 @@ public class SpreadsheetLocation implements Location {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof SpreadsheetLocation)) {
+            return false;
+        }
+        SpreadsheetLocation loc = (SpreadsheetLocation) obj;
+        return rowIndex == loc.rowIndex && colIndex == loc.colIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rowIndex, colIndex);
+    }
 }

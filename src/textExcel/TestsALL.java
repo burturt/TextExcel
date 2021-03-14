@@ -4,19 +4,14 @@ package textExcel;
 //DO NOT MODIFY THIS FILE!!!
 //*******************************************************
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
