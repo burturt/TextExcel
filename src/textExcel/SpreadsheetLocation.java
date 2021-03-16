@@ -2,14 +2,12 @@
  * Converts a cell identifier to row and column indexes
  *
  * @author Alec Machlis
- * @version March 11, 2021
+ * @version March 15, 2021
  */
 
 package textExcel;
 
 //Update this file with your own code.
-
-import java.util.Objects;
 
 public class SpreadsheetLocation implements Location {
     private int rowIndex;
@@ -17,14 +15,12 @@ public class SpreadsheetLocation implements Location {
     @Override
     public int getRow()
     {
-        // TODO Auto-generated method stub
         return rowIndex;
     }
 
     @Override
     public int getCol()
     {
-        // TODO Auto-generated method stub
         return colIndex;
     }
 
@@ -43,6 +39,10 @@ public class SpreadsheetLocation implements Location {
         // Throw error when fails to parse
         try {
             char colChar = Character.toUpperCase(cellName.charAt(0));
+            // Verify is a letter
+            if (!(colChar >= (int) 'A' && colChar <= (int) 'Z')) {
+                throw new IllegalArgumentException("Invalid cell row");
+            }
             int row = Integer.parseInt(cellName.substring(1));
             rowIndex = row - 1;
             colIndex = colChar - 'A';
@@ -63,8 +63,4 @@ public class SpreadsheetLocation implements Location {
         return rowIndex == loc.rowIndex && colIndex == loc.colIndex;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(rowIndex, colIndex);
-    }
 }

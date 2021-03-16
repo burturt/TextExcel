@@ -1,10 +1,16 @@
+/*
+ * Cell class that stores a percent and returns actual value, not percent value
+ *
+ * @author Alec Machlis
+ * @version March 15, 2021
+ */
 package textExcel;
 
 public class PercentCell extends ValueCell {
     public PercentCell(String percent) {
         super(percent);
         // Verify valid
-        getDoubleValue();
+        abbreviatedCellText();
         if (!percent.endsWith("%")) {
             throw new IllegalArgumentException("Percents must end in a percent sign");
         }

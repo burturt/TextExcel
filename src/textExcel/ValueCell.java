@@ -8,6 +8,4 @@ public class ValueCell extends RealCell {
         return Double.parseDouble(super.fullCellText());
     }
 
-
-
 }

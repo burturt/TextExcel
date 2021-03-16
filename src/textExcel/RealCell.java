@@ -1,6 +1,12 @@
+/*
+ * Abstract class that evaluates to a numerical value
+ *
+ * @author Alec Machlis
+ * @version March 15, 2021
+ */
 package textExcel;
 
-public class RealCell implements Cell {
+public abstract class RealCell implements Cell {
     private String value;
 
     public RealCell(String value) {
@@ -20,12 +26,15 @@ public class RealCell implements Cell {
     }
 
     // Should be overridden - returns double value of cell
-    public double getDoubleValue() {
-        return Double.parseDouble(value);
+    public abstract double getDoubleValue();
+
+    // Returns full actual unformatted value
+    public String getFullStringValue() {
+        return fullCellText();
     }
 
-    // Should be overridden - throws error if invalid
+    // throws error if invalid
     public void testValid() {
-        double tempDouble = getDoubleValue();
+        abbreviatedCellText();
     }
 }

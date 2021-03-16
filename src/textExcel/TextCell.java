@@ -1,6 +1,10 @@
+/*
+ * Class that stores raw text
+ *
+ * @author Alec Machlis
+ * @version March 15, 2021
+ */
 package textExcel;
-
-import javax.xml.soap.Text;
 
 public class TextCell implements Cell {
 

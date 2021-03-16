@@ -2,7 +2,7 @@
  * Holds data for and processes actions on a spreadsheet/grid
  *
  * @author Alec Machlis
- * @version March 11, 2021
+ * @version March 15, 2021
  */
 
 package textExcel;
@@ -10,6 +10,7 @@ package textExcel;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("SameReturnValue")
 public class Spreadsheet implements Grid
 {
 	private Cell[][] cells;
@@ -59,6 +60,15 @@ public class Spreadsheet implements Grid
 		return toString();
 	}
 
+	// Fills cells in spreadsheet with certain cell value
+	public void fillAllCells(double cellValue) {
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells[i].length; j++) {
+				cells[i][j] = new ValueCell(cellValue + "");
+			}
+		}
+	}
+
 	// Master method to process raw command input
 	@Override
 	public String processCommand(String command)
@@ -95,6 +105,7 @@ public class Spreadsheet implements Grid
 
 	}
 
+	// Add command to history and remove if too long
 	public void addToHistory(String command) {
 		history.add(0, command);
 		if (historyLength < history.size()) {
@@ -150,7 +161,7 @@ public class Spreadsheet implements Grid
 			// Check if string starts and ends with () --> formula
 			} else if (assignStatement.startsWith("(") && assignStatement.endsWith(")")) {
 				// Create new cell with formula
-				newCell = new FormulaCell(assignStatement);
+				newCell = new FormulaCell(assignStatement, this);
 
 			// Check if string ends in % --> percent
 			} else if (assignStatement.endsWith("%")) {
@@ -231,9 +242,9 @@ public class Spreadsheet implements Grid
 	}
 
 	// Process History Clear command
-	public String commandHistoryClear(String arugments) {
+	public String commandHistoryClear(String arguments) {
 		// Get part after "clear"
-		int clearCount = Integer.parseInt(arugments.substring(arugments.indexOf("clear") + 5).trim());
+		int clearCount = Integer.parseInt(arguments.substring(arguments.indexOf("clear") + 5).trim());
 		int historySize = history.size();
 		// Loop through clearCount elements at the end and remove them
 		// Do not let loop below 0
@@ -244,30 +255,34 @@ public class Spreadsheet implements Grid
 	}
 
 	// Process History Stop command
-	public String commandHistoryStop(String arugments) {
+	public String commandHistoryStop(String arguments) {
 		historyLength = -1;
 		history.clear();
 		return "";
 	}
 
+	// Get number of rows
 	@Override
 	public int getRows()
 	{
 		return cells.length;
 	}
 
+	// Get number of columns
 	@Override
 	public int getCols()
 	{
 		return cells[0].length;
 	}
 
+	// Return cell at location
 	@Override
 	public Cell getCell(Location loc)
 	{
 		return cells[loc.getRow()][loc.getCol()];
 	}
 
+	// Calls toString() for compatibility
 	@Override
 	public String getGridText()
 	{
@@ -328,7 +343,9 @@ public class Spreadsheet implements Grid
 		for (int i = 'A'; i <= 'L'; i++) {
 			formattedTable += String.format("%-10.10s|", (char) i + "");
 		}
+		// Print rows
 		for (int i = 1; i <= cells.length; i++) {
+			// Print numbers on side
 			formattedTable += String.format("%n%-3s|", i + "");
 			for (Cell cell : cells[i - 1]) {
 				formattedTable += cell.abbreviatedCellText() + "|";
