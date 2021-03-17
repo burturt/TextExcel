@@ -2,7 +2,7 @@
  * Cell class that stores a percent and returns actual value, not percent value
  *
  * @author Alec Machlis
- * @version March 15, 2021
+ * @version March 16, 2021
  */
 package textExcel;
 

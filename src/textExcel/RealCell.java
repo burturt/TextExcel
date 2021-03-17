@@ -2,7 +2,7 @@
  * Abstract class that evaluates to a numerical value
  *
  * @author Alec Machlis
- * @version March 15, 2021
+ * @version March 16, 2021
  */
 package textExcel;
 
@@ -33,7 +33,7 @@ public abstract class RealCell implements Cell {
         return fullCellText();
     }
 
-    // throws error if invalid
+    // throws error if invalid, blocking construction
     public void testValid() {
         abbreviatedCellText();
     }

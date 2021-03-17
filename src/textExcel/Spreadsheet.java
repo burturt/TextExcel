@@ -2,15 +2,13 @@
  * Holds data for and processes actions on a spreadsheet/grid
  *
  * @author Alec Machlis
- * @version March 15, 2021
+ * @version March 16, 2021
  */
 
 package textExcel;
 
-
 import java.util.ArrayList;
 
-@SuppressWarnings("SameReturnValue")
 public class Spreadsheet implements Grid
 {
 	private Cell[][] cells;
@@ -34,9 +32,9 @@ public class Spreadsheet implements Grid
 			{"<text>", "\"<text>\"", "Plain text cell - can store anything", "Cell that simply holds a text value. Cannot do computations. Indicate text by surrounding with quotes"},
 			{"<value>", "<value>", "Plain numerical value", "Stores a number, can be a decimal. Can be used in computations"},
 			{"<perc>", "<perc>%", "Percent value", "Stores a percent of something. Stored as decimal, printed as percentage."},
-			{"*<formula>","( <formula> )", "Mathematical formula", "A mathematical formula that is either arithmetic or a range function.\n\t\tArithmetic: Can use +, -, *, / combined with numbers and cell references. Evaluates left-to-right.\n\t\tRange function: Can be either 'sum' or 'svg' with nothing else in it. See 'help avg' or 'help sum' for info about the 2 functions.\n\t\tOperators and functions MUST be separated by spaces."},
-			{"*avg", "avg <cell>-<cell>", "Calculate average in formula", "Given a range of cells, calculates the average value of all value, percent, and other formula cells."},
-			{"*sum", "sum <cell>-<cell>", "Calculates sum in formula", "Given a range of cells, calculates the sum of all value, percentage, and other formula cells"}
+			{"<formula>","( <formula> )", "Mathematical formula", "A mathematical formula that is either arithmetic or a range function.\n\t\tArithmetic: Can use +, -, *, / combined with numbers and cell references. Evaluates left-to-right.\n\t\tRange function: Can be either 'sum' or 'svg' with nothing else in it. See 'help avg' or 'help sum' for info about the 2 functions.\n\t\tOperators and functions MUST be separated by spaces."},
+			{"avg", "avg <cell>-<cell>", "Calculate average in formula", "Given a range of cells, calculates the average value of all value, percent, and other formula cells."},
+			{"sum", "sum <cell>-<cell>", "Calculates sum in formula", "Given a range of cells, calculates the sum of all value, percentage, and other formula cells"}
 	};
 
 

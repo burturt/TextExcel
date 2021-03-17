@@ -2,7 +2,7 @@
  * Class that stores and evaluates a formula
  *
  * @author Alec Machlis
- * @version March 15, 2021
+ * @version March 16, 2021
  */
 package textExcel;
 
@@ -132,7 +132,7 @@ public class FormulaCell extends RealCell {
         cells.add(this);
         upstreamCells = cells;
         String fullValue = getFullStringValue();
-        upstreamCells.remove(this);
+        upstreamCells.remove(this); // Remove cell from list to prevent issues when cells aren't circular but parallel referenced
         return fullValue;
     }
 
@@ -215,7 +215,6 @@ public class FormulaCell extends RealCell {
         for (int i = corner1.getRow(); i <= corner2.getRow(); i++) {
             for (int j = corner1.getCol(); j <= corner2.getCol(); j++) {
                 String cellName = (char) (j + 'A') + "" + (i + 1);
-                System.out.println(cellName);
                 sum += parseCell(cellName);
             }
         }
