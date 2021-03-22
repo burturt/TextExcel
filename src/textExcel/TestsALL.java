@@ -21,14 +21,16 @@ import static org.junit.Assert.*;
     //TestsALL.A_Final.class,
     TestsALL.B_Checkpoint1.class,
     TestsALL.B_Final.class,
+        /*
     TestsALL.C_Checkpoint1.class,
     TestsALL.C_Final.class,
+         */
     TestsALL.ExtraCreditCommandErrors.class,
     TestsALL.ExtraCreditCommandHistory.class,
     TestsALL.ExtraCreditCircularReferenceErrors.class,
     TestsALL.ExtraCreditEvaluationErrors.class,
     TestsALL.ExtraCreditOperationOrder.class,
-    TestsALL.C_ExtraCreditHeterogeneousSorting.class,
+    // TestsALL.C_ExtraCreditHeterogeneousSorting.class,
 })
 
 public class TestsALL

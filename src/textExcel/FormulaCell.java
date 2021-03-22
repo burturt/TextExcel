@@ -2,7 +2,7 @@
  * Class that stores and evaluates a formula
  *
  * @author Alec Machlis
- * @version March 16, 2021
+ * @version March 18, 2021
  */
 package textExcel;
 
@@ -39,9 +39,9 @@ public class FormulaCell extends RealCell {
         // Catch runtime errors
         try {
             return String.format("%-10.10s", getDoubleValue() + "");
-        } catch (ArithmeticException | IllegalStateException e) { // Thrown if bad calculation (divide by zero, etc)
+        } catch (ArithmeticException | IllegalStateException e) { // Thrown if bad calculation or bad cell reference
             return "#ERROR    ";
-        } // Thrown if referenced a non-value cell
+        }
 
     }
 
@@ -63,7 +63,7 @@ public class FormulaCell extends RealCell {
             }
         }
 
-        // Check and discard ( and ) elements at beginning and end
+        // Check for and discard ( and ) elements at beginning and end
         if ( !(expressionParts.get(0).equals("(")) || !(expressionParts.get(expressionParts.size() - 1).equals(")")) ) {
             throw new IllegalArgumentException("Must start and end with parenthesis");
         }
@@ -86,12 +86,15 @@ public class FormulaCell extends RealCell {
                 throw new IllegalArgumentException("Expression must alternate between numbers/cells and operators");
             }
         }
+        // last part must be number
         evaluateStringValue(expressionParts.get(expressionParts.size()-1));
 
 
-        // Loop through elements of the array:
-        // Get number, get operator and number after in next element, calculate and collapse
-        // Loop through once only doing * and / operators, second time do all operators remaining
+        /*
+         Loop through elements of the array:
+         Get number, get operator and number after in next element, calculate and collapse
+         Loop through once only doing * and / operators, second time do all operators remaining (order of operations)
+        */
 
         int i = 0;
         while (i + 1 < expressionParts.size()) {
@@ -121,7 +124,6 @@ public class FormulaCell extends RealCell {
         } catch (ArithmeticException | IllegalStateException e) { // Thrown if bad calculation (divide by zero, etc) or bad cell reference
             return "#ERROR";
         }
-
     }
 
     // Calculates and returns actual unformatted full value after checking for recursion by passing in list of cells
@@ -196,30 +198,9 @@ public class FormulaCell extends RealCell {
         if (function.size() != 2) {
             throw new IllegalArgumentException("Sum function must only contain the word 'sum' and a range, like A1-C5");
         }
-        String range = function.get(function.indexOf("SUM") + 1);
-        String[] corners = range.split("-");
-        if ( !(corners.length == 2) ) {
-            throw new IllegalArgumentException("Invalid sum expression. Must only contain sum and a range of 2 cells separated by a - without spaces.");
-        }
+        String range = function.get(1);
 
-        // Attempt to get cells
-        SpreadsheetLocation corner1, corner2;
-        try {
-            corner1 = new SpreadsheetLocation(corners[0]);
-            corner2 = new SpreadsheetLocation(corners[1]);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalStateException("Invalid cell in range");
-        }
-
-        double sum = 0.0;
-        for (int i = corner1.getRow(); i <= corner2.getRow(); i++) {
-            for (int j = corner1.getCol(); j <= corner2.getCol(); j++) {
-                String cellName = (char) (j + 'A') + "" + (i + 1);
-                sum += parseCell(cellName);
-            }
-        }
-
-        return sum;
+        return getCellRangeSum(range);
 
     }
 
@@ -229,26 +210,9 @@ public class FormulaCell extends RealCell {
         if (function.size() != 2) {
             throw new IllegalArgumentException("Avg function must only contain the word 'avg' and a range, like A1-C5");
         }
-        String range = function.get(function.indexOf("AVG") + 1);
-        String[] corners = range.split("-");
-        if ( !(corners.length == 2) ) {
-            throw new IllegalArgumentException("Invalid avg expression. Must only contain avg and a range of 2 cells separated by a - without spaces.");
-        }
+        String range = function.get(1);
 
-        // Attempt to get cells
-        SpreadsheetLocation corner1 = new SpreadsheetLocation(corners[0]);
-        SpreadsheetLocation corner2 = new SpreadsheetLocation(corners[1]);
-        double sum = 0.0;
-        int cellCount = 0;
-        for (int i = corner1.getRow(); i <= corner2.getRow(); i++) {
-            for (int j = corner1.getCol(); j <= corner2.getCol(); j++) {
-                cellCount++;
-                String cellName = (char) (j + 'A') + "" + (i + 1);
-                sum += parseCell(cellName);
-            }
-        }
-
-        return sum/cellCount;
+        return getCellRangeSum(range)/ getCellRangeCount(range);
     }
 
     // Sets up test info and tests for pattern of alternating cells and numbers.
@@ -256,9 +220,12 @@ public class FormulaCell extends RealCell {
         // Assign dummy spreadsheet if a spreadsheet doesn't already exist
         if (spreadsheetData == null) {
             spreadsheetData = new Spreadsheet();
-            // Fill spreadsheet with temporary Real value to prevent premature test stopping
-            spreadsheetData.fillAllCells(1.0);
-
+            // Fill spreadsheet with temporary random real value to prevent premature test stopping
+            for (int i = 0; i < spreadsheetData.getRows(); i++) {
+                for (int j = 0; j < spreadsheetData.getCols(); j++) {
+                    spreadsheetData.setCell(new ValueCell(Math.random() + 1 + ""), i, j);
+                }
+            }
         }
         // Fill operator array
         operators = new ArrayList<>();
@@ -267,10 +234,41 @@ public class FormulaCell extends RealCell {
         operators.add("*");
         operators.add("/");
 
-        upstreamCells = new ArrayList<>();
         // Test with spreadsheet
         abbreviatedCellText();
     }
 
+    // Get sum of values from cell range
+    public double getCellRangeSum(String range) {
+
+        String[] corners = range.split("-");
+        if ( !(corners.length == 2) ) {
+            throw new IllegalArgumentException("Invalid avg expression. Must only contain avg and a range of 2 cells separated by a - without spaces.");
+        }
+
+        SpreadsheetLocation corner1 = new SpreadsheetLocation(corners[0]);
+        SpreadsheetLocation corner2 = new SpreadsheetLocation(corners[1]);
+        double sum = 0.0;
+        for (int i = corner1.getRow(); i <= corner2.getRow(); i++) {
+            for (int j = corner1.getCol(); j <= corner2.getCol(); j++) {
+                String cellName = (char) (j + 'A') + "" + (i + 1);
+                sum += parseCell(cellName);
+            }
+        }
+        return sum;
+    }
+
+    // Get count of cells in cell range
+    public double getCellRangeCount(String range) {
+        String[] corners = range.split("-");
+        if ( !(corners.length == 2) ) {
+            throw new IllegalArgumentException("Invalid avg expression. Must only contain avg and a range of 2 cells separated by a - without spaces.");
+        }
+
+        SpreadsheetLocation corner1 = new SpreadsheetLocation(corners[0]);
+        SpreadsheetLocation corner2 = new SpreadsheetLocation(corners[1]);
+        // Multiply dimensions together to get count
+        return ( corner2.getRow() - corner1.getRow() + 1 ) * ( corner2.getCol() - corner1.getCol() + 1 );
+    }
 
 }

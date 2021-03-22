@@ -33,7 +33,7 @@ public abstract class RealCell implements Cell {
         return fullCellText();
     }
 
-    // throws error if invalid, blocking construction
+    // throws error if invalid, blocking construction. Can be overridden.
     public void testValid() {
         abbreviatedCellText();
     }

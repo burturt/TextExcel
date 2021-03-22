@@ -51,6 +51,12 @@ public class SpreadsheetLocation implements Location {
         }
     }
 
+    // Overloaded constructor: allow creation location by index instead
+    public SpreadsheetLocation(int rowIndex, int colIndex) {
+        this.rowIndex = rowIndex;
+        this.colIndex = colIndex;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

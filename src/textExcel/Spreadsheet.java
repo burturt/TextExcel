@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Spreadsheet implements Grid
 {
-	private Cell[][] cells;
+	private Cell[][] sheet;
 	private ArrayList<String> history;
 	private int historyLength;
 
@@ -40,7 +40,7 @@ public class Spreadsheet implements Grid
 
 	public Spreadsheet() {
 		// Create new cell array
-		cells = new Cell[20][12];
+		sheet = new Cell[20][12];
 		// Fill array with Empty Cells
 		clearFullSpreadsheet();
 		// Set up history data
@@ -50,21 +50,17 @@ public class Spreadsheet implements Grid
 
 	// Assign all cells in array an EmptyCell
 	public String clearFullSpreadsheet() {
-		for (int i = 0; i < cells.length; i++) {
-			for (int j = 0; j < cells[i].length; j++) {
-				cells[i][j] = new EmptyCell();
+		for (int i = 0; i < sheet.length; i++) {
+			for (int j = 0; j < sheet[i].length; j++) {
+				sheet[i][j] = new EmptyCell();
 			}
 		}
 		return toString();
 	}
 
-	// Fills cells in spreadsheet with certain cell value
-	public void fillAllCells(double cellValue) {
-		for (int i = 0; i < cells.length; i++) {
-			for (int j = 0; j < cells[i].length; j++) {
-				cells[i][j] = new ValueCell(cellValue + "");
-			}
-		}
+	// Set cell given x/y location index
+	public void setCell(Cell cell, int row, int col) {
+		sheet[row][col] = cell;
 	}
 
 	// Master method to process raw command input
@@ -135,8 +131,9 @@ public class Spreadsheet implements Grid
 		// If cell is the only thing in the command, print cell text
 		if (command.length() <= 3) {
 			// Skip loop execution if equals is at index 2, so A4="hi" won't print out cell but assign properly
-			if (command.length() == 2 || command.charAt(2) != '=')
+			if (command.length() == 2 || command.charAt(2) != '=') {
 				return cell.fullCellText();
+			}
 		}
 
 		// Split at = sign to try to get assignment value
@@ -175,7 +172,7 @@ public class Spreadsheet implements Grid
 		} catch (Exception e) {
 			return "ERROR: assignment expression is invalid: " + e;
 		}
-		cells[cellLoc.getRow()][cellLoc.getCol()] = newCell;
+		sheet[cellLoc.getRow()][cellLoc.getCol()] = newCell;
 		return toString();
 	}
 
@@ -263,21 +260,21 @@ public class Spreadsheet implements Grid
 	@Override
 	public int getRows()
 	{
-		return cells.length;
+		return sheet.length;
 	}
 
 	// Get number of columns
 	@Override
 	public int getCols()
 	{
-		return cells[0].length;
+		return sheet[0].length;
 	}
 
 	// Return cell at location
 	@Override
 	public Cell getCell(Location loc)
 	{
-		return cells[loc.getRow()][loc.getCol()];
+		return sheet[loc.getRow()][loc.getCol()];
 	}
 
 	// Calls toString() for compatibility
@@ -328,7 +325,7 @@ public class Spreadsheet implements Grid
 		} else {
 			try {
 				SpreadsheetLocation clearLoc = new SpreadsheetLocation(helpArgument[1].trim());
-				cells[clearLoc.getRow()][clearLoc.getCol()] = new EmptyCell();
+				sheet[clearLoc.getRow()][clearLoc.getCol()] = new EmptyCell();
 				return toString();
 			} catch (Exception e) {
 				return "Invalid syntax for clear command. 'help clear' for more info.";
@@ -342,10 +339,10 @@ public class Spreadsheet implements Grid
 			formattedTable += String.format("%-10.10s|", (char) i + "");
 		}
 		// Print rows
-		for (int i = 1; i <= cells.length; i++) {
+		for (int i = 1; i <= sheet.length; i++) {
 			// Print numbers on side
 			formattedTable += String.format("%n%-3s|", i + "");
-			for (Cell cell : cells[i - 1]) {
+			for (Cell cell : sheet[i - 1]) {
 				formattedTable += cell.abbreviatedCellText() + "|";
 			}
 		}
