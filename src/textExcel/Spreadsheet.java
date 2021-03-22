@@ -94,6 +94,15 @@ public class Spreadsheet implements Grid
 		if (command.toLowerCase().startsWith("print")) {
 			return toString();
 		}
+		if (command.toLowerCase().startsWith("sort")) {
+			if (command.toLowerCase().charAt(4) == 'a') {
+				return commandSort(command, true);
+			} else if (command.toLowerCase().charAt(4) == 'd') {
+				return commandSort(command, false);
+			} else {
+				return "ERROR: invalid command";
+			}
+		}
 		// Process cell assignment commands
 		return processCellAssignment(command);
 
@@ -256,6 +265,102 @@ public class Spreadsheet implements Grid
 		return "";
 	}
 
+	// Process sortA command
+	public String commandSort(String command, boolean ascending) {
+
+		String arguments = command.substring(5).trim();
+
+		ArrayList<SpreadsheetLocation> cellsOrder = getCells(arguments.trim());
+		ArrayList<Cell> cells = new ArrayList<>();
+		for (SpreadsheetLocation loc : cellsOrder) {
+			cells.add(getCell(loc));
+		}
+		// Selection sort - find minimum, add to beginning, remove, rinse and repeat
+		// Sort textcells first
+		for (int i = 0; i < cells.size(); i++) {
+			Cell extreme = cells.get(i);
+			for (int j = i; j < cells.size(); j++) {
+				if (ascending && compareCells(extreme, cells.get(j)) > 0) {
+					extreme = cells.get(j);
+				} else if (!ascending && compareCells(extreme, cells.get(j)) < 0) {
+					extreme = cells.get(j);
+				}
+			}
+			// Remove that cell
+			cells.remove(extreme);
+			// Add cell to front
+			cells.add(i, extreme);
+
+		}
+		// Assign cells back again
+		setCells(arguments, cells);
+		return toString();
+	}
+
+	// Compare 2 cells after verifying type
+	public int compareCells(Cell cell1, Cell cell2) {
+
+		// Empty Cells always come first
+		if (cell1 instanceof EmptyCell) {
+			return -1;
+		} else if (cell2 instanceof EmptyCell) {
+			return 1;
+		}
+		// If one but not both are TextCells, return textcell
+		if (cell1 instanceof TextCell && !(cell2 instanceof TextCell)) {
+			return -1;
+		} else if (cell2 instanceof TextCell && !(cell1 instanceof  TextCell)) {
+			return 1;
+		}
+		// If both text cells, cast to TextCell and compare
+		if (cell1 instanceof TextCell && cell2 instanceof TextCell) {
+			return ((TextCell) cell1).compareTo((TextCell) cell2);
+		}
+		// If here, both must be RealCells, so sort them
+		return ((RealCell) cell1).compareTo((RealCell) cell2);
+
+	}
+
+
+	// Get spreadsheet locations from cell range
+	public ArrayList<SpreadsheetLocation> getCells(String cellRange) {
+		ArrayList<SpreadsheetLocation> cells = new ArrayList<>();
+		String[] corners = cellRange.split("-");
+		if ( !(corners.length == 2) ) {
+			throw new IllegalArgumentException("Invalid cell range");
+		}
+
+		SpreadsheetLocation corner1 = new SpreadsheetLocation(corners[0]);
+		SpreadsheetLocation corner2 = new SpreadsheetLocation(corners[1]);
+		for (int row = corner1.getRow(); row <= corner2.getRow(); row++) {
+			for (int col = corner1.getCol(); col <= corner2.getCol(); col++) {
+				SpreadsheetLocation loc = new SpreadsheetLocation(row, col);
+				cells.add(loc);
+			}
+		}
+		return cells;
+	}
+
+	// Set cells given arraylist and cellrange
+	// Get spreadsheet locations from cell range
+	public void setCells(String cellRange, ArrayList<Cell> cells) {
+		String[] corners = cellRange.split("-");
+		if ( !(corners.length == 2) ) {
+			throw new IllegalArgumentException("Invalid cell range");
+		}
+
+		SpreadsheetLocation corner1 = new SpreadsheetLocation(corners[0]);
+		SpreadsheetLocation corner2 = new SpreadsheetLocation(corners[1]);
+		int cellListIdx = 0;
+		for (int row = corner1.getRow(); row <= corner2.getRow(); row++) {
+			for (int col = corner1.getCol(); col <= corner2.getCol(); col++) {
+				SpreadsheetLocation loc = new SpreadsheetLocation(row, col);
+				setCell(cells.get(cellListIdx), loc.getRow(), loc.getCol());
+				cellListIdx++;
+			}
+		}
+	}
+
 	// Get number of rows
 	@Override
 	public int getRows()
@@ -284,7 +389,7 @@ public class Spreadsheet implements Grid
 		return toString();
 	}
 
-	// Returns command format in nice string format
+	// Returns command format in nice string format - NOT PART OF ASSIGNMENT, just something I did for fun
 	public static String getCommandReference() {
 		String reference = "";
 		reference += "Arguments in [] are optional, arguments in <> are mandatory. Commands are case-insensitive.\n";
@@ -336,12 +441,17 @@ public class Spreadsheet implements Grid
 		String formattedTable = "   |";
 		// Make table header
 		for (int i = 'A'; i <= 'L'; i++) {
-			formattedTable += String.format("%-10.10s|", (char) i + "");
+			formattedTable +=  (char) i + "         |";
 		}
 		// Print rows
 		for (int i = 1; i <= sheet.length; i++) {
-			// Print numbers on side
-			formattedTable += String.format("%n%-3s|", i + "");
+			// Get # of spaces by String length of number
+			String spaces = "";
+			for (int s = 0; s < 3 - ("" + i).length(); s++ ) {
+				spaces += " ";
+			}
+			formattedTable += "\n" + i + spaces + "|";
+			// Print cells
 			for (Cell cell : sheet[i - 1]) {
 				formattedTable += cell.abbreviatedCellText() + "|";
 			}

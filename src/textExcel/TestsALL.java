@@ -15,22 +15,20 @@ import static org.junit.Assert.*;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    TestsALL.A_Checkpoint1.class,
-    TestsALL.A_Checkpoint2.class,
-    TestsALL.A_Checkpoint3.class,
-    //TestsALL.A_Final.class,
-    TestsALL.B_Checkpoint1.class,
-    TestsALL.B_Final.class,
-        /*
-    TestsALL.C_Checkpoint1.class,
-    TestsALL.C_Final.class,
-         */
-    TestsALL.ExtraCreditCommandErrors.class,
-    TestsALL.ExtraCreditCommandHistory.class,
-    TestsALL.ExtraCreditCircularReferenceErrors.class,
-    TestsALL.ExtraCreditEvaluationErrors.class,
-    TestsALL.ExtraCreditOperationOrder.class,
-    // TestsALL.C_ExtraCreditHeterogeneousSorting.class,
+        TestsALL.A_Checkpoint1.class,
+        TestsALL.A_Checkpoint2.class,
+        TestsALL.A_Checkpoint3.class,
+        //TestsALL.A_Final.class,
+        TestsALL.B_Checkpoint1.class,
+        TestsALL.B_Final.class,
+        TestsALL.C_Checkpoint1.class,
+        TestsALL.C_Final.class,
+        TestsALL.ExtraCreditCommandErrors.class,
+        TestsALL.ExtraCreditCommandHistory.class,
+        TestsALL.ExtraCreditCircularReferenceErrors.class,
+        TestsALL.ExtraCreditEvaluationErrors.class,
+        TestsALL.ExtraCreditOperationOrder.class,
+        TestsALL.C_ExtraCreditHeterogeneousSorting.class,
 })
 
 public class TestsALL
@@ -136,16 +134,16 @@ public class TestsALL
         public void testLongShortStringCell()
         {
             SpreadsheetLocation loc = new SpreadsheetLocation("L20");
-            assertEquals("SpreadsheetLocation column",  11, loc.getCol());
-            assertEquals("SpreadsheetLocation row", 19, loc.getRow());
+            assertEquals("SpreadsheetLocation column", loc.getCol(), 11);
+            assertEquals("SpreadsheetLocation row", loc.getRow(), 19);
 
             loc = new SpreadsheetLocation("D5");
-            assertEquals("SpreadsheetLocation column", 3, loc.getCol());
-            assertEquals("SpreadsheetLocation row", 4, loc.getRow());
+            assertEquals("SpreadsheetLocation column", loc.getCol(), 3);
+            assertEquals("SpreadsheetLocation row", loc.getRow(), 4);
 
             loc = new SpreadsheetLocation("A1");
-            assertEquals("SpreadsheetLocation column",  0, loc.getCol());
-            assertEquals("SpreadsheetLocation row",  0, loc.getRow());
+            assertEquals("SpreadsheetLocation column", loc.getCol(), 0);
+            assertEquals("SpreadsheetLocation row", loc.getRow(), 0);
         }
 
         @Test
@@ -538,7 +536,7 @@ public class TestsALL
             assertEquals("real precise percent cell length", 10, precisePerCell.abbreviatedCellText().length());
             assertEquals("real precise percent cell", "7%", precisePerCell.abbreviatedCellText().trim());
             assertEquals("real precise percent inspection", "0.0787878", precisePerCell.fullCellText());
-        }        
+        }
     }
 
  /*
@@ -574,8 +572,8 @@ public class TestsALL
             grid.processCommand("B3 = -52.5");                  // Value
             grid.processCommand("J6 = 2.888");                  // Value
             grid.processCommand("L20 = 0");                     // Value
-            grid.processCommand("D10 = \"ChocolateChocolateChipCrustedCookie\"");    // Text            
-            grid.processCommand("F4 = ( 2 + 1 * 7 )");         // Formula            
+            grid.processCommand("D10 = \"ChocolateChocolateChipCrustedCookie\"");    // Text
+            grid.processCommand("F4 = ( 2 + 1 * 7 )");         // Formula
             grid.processCommand("save TestSaveFormat.csv");
 
             // Open the file manually with a scanner to inspect its contents
@@ -742,7 +740,7 @@ public class TestsALL
         }
     }
 */
-    
+
     public static class B_Checkpoint1
     {
         // Tests for Part B, Checkpoint 1
@@ -958,8 +956,8 @@ public class TestsALL
             grid.processCommand("B3 = -52.5");                  // Value
             grid.processCommand("J6 = 2.888");                  // Value
             grid.processCommand("L20 = 0");                     // Value
-            grid.processCommand("D10 = \"ChocolateChocolateChipCrustedCookie\"");    // Text            
-            grid.processCommand("F4 = ( 2 + A1 * 7 )");         // Formula            
+            grid.processCommand("D10 = \"ChocolateChocolateChipCrustedCookie\"");    // Text
+            grid.processCommand("F4 = ( 2 + A1 * 7 )");         // Formula
             grid.processCommand("save TestSaveFormat.csv");
 
             // Open the file manually with a scanner to inspect its contents
@@ -1334,7 +1332,7 @@ public class TestsALL
             assertEquals("updated avg nested", 29.1875, resultAvg, 1e-6);
         }
     }
-    
+
     public static class C_Checkpoint1
     {
         private Grid grid;
@@ -1351,7 +1349,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortaTextCol() 
+        public void testSortaTextCol()
         {
             grid.processCommand("A1 = \"rocks\"");
             grid.processCommand("A2 = \"babies\"");
@@ -1384,7 +1382,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortaTextRowExtraValues() 
+        public void testSortaTextRowExtraValues()
         {
 
             grid.processCommand("A1 = \"branded\"");
@@ -1408,7 +1406,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortaMultidigit2DText() 
+        public void testSortaMultidigit2DText()
         {
             grid.processCommand("A9 = \"fiddle\"");
             grid.processCommand("A10 = \"arduous\"");
@@ -1433,9 +1431,9 @@ public class TestsALL
                     assertEquals("Inspecting cell " + getCellName(row, col), sortedVals[iSortedVals++], grid.getCell(new TestLocation(row,col)).fullCellText());
                 }
             }
-        }       
+        }
     }
-    
+
     public static class C_Final
     {
         private Grid grid;
@@ -1452,7 +1450,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortaCol() 
+        public void testSortaCol()
         {
             grid.processCommand("A1 = 19.1");
             grid.processCommand("A2 = 2.1");
@@ -1485,7 +1483,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortaRowExtraValues() 
+        public void testSortaRowExtraValues()
         {
 
             grid.processCommand("A1 = 19.4");
@@ -1509,7 +1507,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortaTwoDimensionalOffset() 
+        public void testSortaTwoDimensionalOffset()
         {
 
             grid.processCommand("C3 = 19.5");
@@ -1531,7 +1529,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortaTwoDimensional() 
+        public void testSortaTwoDimensional()
         {
 
             grid.processCommand("A1 = 19.3");
@@ -1548,7 +1546,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortdCol() 
+        public void testSortdCol()
         {
             grid.processCommand("A1 = 19.2");
             grid.processCommand("A2 = 2.2");
@@ -1564,7 +1562,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortdMultidigit2DValue() 
+        public void testSortdMultidigit2DValue()
         {
             grid.processCommand("A9 = -13.2");
             grid.processCommand("A10 = 19.2");
@@ -1589,7 +1587,7 @@ public class TestsALL
                     assertEquals("Inspecting cell " + getCellName(row, col), sortedVals[iSortedVals++], grid.getCell(new TestLocation(row,col)).fullCellText());
                 }
             }
-        }  
+        }
 
         @Test
         public void testSortDMultiType2D()
@@ -1650,28 +1648,28 @@ public class TestsALL
                 }
             }
         }
-        
+
         @Test
         public void testComparableText()
         {
             grid.processCommand("A1 = \"chocolate\"");
             grid.processCommand("B1 = \"chocolate\"");
             grid.processCommand("C1 = \"sauce\"");
-            
+
             Cell a1 = grid.getCell(new TestLocation(0, 0));
             Cell b1 = grid.getCell(new TestLocation(0, 1));
             Cell c1 = grid.getCell(new TestLocation(0, 2));
-            
+
             // If any of these CRASH (RED), then you did not properly implement the
             // Comparable interface on your TextCell class
             Comparable<Object> comparableA1 = (Comparable<Object>) a1;
             Comparable<Object> comparableC1 = (Comparable<Object>) c1;
-            
+
             assertEquals("Comparing string with itself should give 0", 0, comparableA1.compareTo(b1));
             assertTrue("Comparing string with later string should return negative", comparableA1.compareTo(c1) < 0);
             assertTrue("Comparing string with earlier string should return positive", comparableC1.compareTo(a1) > 0);
         }
-        
+
         @Test
         public void testComparableValue()
         {
@@ -1679,23 +1677,23 @@ public class TestsALL
             grid.processCommand("B1 = 5.5");
             grid.processCommand("C1 = 5.6");
             grid.processCommand("D1 = -5.7");
-            
+
             Cell a1 = grid.getCell(new TestLocation(0, 0));
             Cell b1 = grid.getCell(new TestLocation(0, 1));
             Cell c1 = grid.getCell(new TestLocation(0, 2));
             Cell d1 = grid.getCell(new TestLocation(0, 3));
-            
+
             // If any of these CRASH (RED), then you did not properly implement the
             // Comparable interface on your ValueCell class
             Comparable<Object> comparableA1 = (Comparable<Object>) a1;
             Comparable<Object> comparableC1 = (Comparable<Object>) c1;
-            
+
             assertEquals("Comparing value with itself should give 0", 0, comparableA1.compareTo(b1));
             assertTrue("Comparing value with larger value should return negative", comparableA1.compareTo(c1) < 0);
             assertTrue("Comparing value with smaller value should return positive", comparableC1.compareTo(a1) > 0);
             assertTrue("Comparing value with smaller value should return positive", comparableA1.compareTo(d1) > 0);
-        }        
-        
+        }
+
         @Test
         public void testComparablePercent()
         {
@@ -1703,44 +1701,44 @@ public class TestsALL
             grid.processCommand("B1 = 55%");
             grid.processCommand("C1 = 56%");
             grid.processCommand("D1 = 157%");
-            
+
             Cell a1 = grid.getCell(new TestLocation(0, 0));
             Cell b1 = grid.getCell(new TestLocation(0, 1));
             Cell c1 = grid.getCell(new TestLocation(0, 2));
             Cell d1 = grid.getCell(new TestLocation(0, 3));
-            
+
             // If any of these CRASH (RED), then you did not properly implement the
             // Comparable interface on your PercentCell class
             Comparable<Object> comparableA1 = (Comparable<Object>) a1;
             Comparable<Object> comparableC1 = (Comparable<Object>) c1;
             Comparable<Object> comparableD1 = (Comparable<Object>) d1;
-            
+
             assertEquals("Comparing percent with itself should give 0", 0, comparableA1.compareTo(b1));
             assertTrue("Comparing percent with larger percent should return negative", comparableA1.compareTo(c1) < 0);
             assertTrue("Comparing percent with smaller percent should return positive", comparableD1.compareTo(a1) > 0);
-        }       
-        
+        }
+
         @Test
         public void testComparableFormula()
         {
             grid.processCommand("A1 = ( 1 + 2 + 2 )");
             grid.processCommand("B1 = ( 5 * 1 )");
             grid.processCommand("C1 = ( 0 * 7 + 100 )");
-            
+
             Cell a1 = grid.getCell(new TestLocation(0, 0));
             Cell b1 = grid.getCell(new TestLocation(0, 1));
             Cell c1 = grid.getCell(new TestLocation(0, 2));
-            
+
             // If any of these CRASH (RED), then you did not properly implement the
             // Comparable interface on your FormulaCell class
             Comparable<Object> comparableA1 = (Comparable<Object>) a1;
             Comparable<Object> comparableC1 = (Comparable<Object>) c1;
-            
+
             assertEquals("Comparing formulas with same value should give 0", 0, comparableA1.compareTo(b1));
             assertTrue("Comparing formula to one with larger value should return negative", comparableA1.compareTo(c1) < 0);
             assertTrue("Comparing formula to one with smaller value should return positive", comparableC1.compareTo(a1) > 0);
         }
-        
+
         @Test
         public void testComparableRealMixed()
         {
@@ -1750,14 +1748,14 @@ public class TestsALL
             grid.processCommand("A2 = ( 3 * 2 )");
             grid.processCommand("B2 = 100");
             grid.processCommand("C2 = 501%");
-            
+
             Cell a1 = grid.getCell(new TestLocation(0, 0));
             Cell b1 = grid.getCell(new TestLocation(0, 1));
             Cell c1 = grid.getCell(new TestLocation(0, 2));
             Cell a2 = grid.getCell(new TestLocation(1, 0));
             Cell b2 = grid.getCell(new TestLocation(1, 1));
             Cell c2 = grid.getCell(new TestLocation(1, 2));
-            
+
             // If any of these CRASH (RED), then you did not properly implement the
             // Comparable interface on one or more of your RealCell subclasses
             Comparable<Object> comparableA1 = (Comparable<Object>) a1;
@@ -1766,9 +1764,9 @@ public class TestsALL
             Comparable<Object> comparableA2 = (Comparable<Object>) a2;
             Comparable<Object> comparableB2 = (Comparable<Object>) b2;
             Comparable<Object> comparableC2 = (Comparable<Object>) c2;
-            
+
             // RealCells with same getDoubleValue
-            
+
             assertEquals("Comparing formula with matching value should give 0", 0, comparableA1.compareTo(b1));
             assertEquals("Comparing value with matching formula should give 0", 0, comparableB1.compareTo(a1));
             assertEquals("Comparing formula with matching percent should give 0", 0, comparableA1.compareTo(c1));
@@ -1786,16 +1784,16 @@ public class TestsALL
 
             assertTrue("Comparing value with larger percent should return negative", comparableB1.compareTo(c2) < 0);
             assertTrue("Comparing percent with smaller value should return positive", comparableC2.compareTo(b1) > 0);
-            
+
             assertTrue("Comparing formula with smaller value should return positive", comparableA2.compareTo(b1) > 0);
             assertTrue("Comparing value with larger formula should return negative", comparableB1.compareTo(a2) < 0);
-            
+
             assertTrue("Comparing formula with smaller percent should return positive", comparableA2.compareTo(c1) > 0);
             assertTrue("Comparing percent with larger formula should return negative", comparableC1.compareTo(a2) < 0);
-            
+
             assertTrue("Comparing value with smaller percent should return positive", comparableB2.compareTo(c1) > 0);
             assertTrue("Comparing percent with larger value should return negative", comparableC1.compareTo(b2) < 0);
-        }        
+        }
     }
 
     public static class ExtraCreditCommandErrors
@@ -1918,31 +1916,31 @@ public class TestsALL
 
             executeCommands(new String[]
                     {
-                    "A1 = 5",
-                    "A2 = \"Test\""
+                            "A1 = 5",
+                            "A2 = \"Test\""
                     });
 
             checkHistory(new String[]
                     {
-                    "A2 = \"Test\"",
-                    "A1 = 5"
+                            "A2 = \"Test\"",
+                            "A1 = 5"
                     });
 
             executeCommands(new String[]
                     {
-                    "clear A1",
-                    "A3 = 10"
+                            "clear A1",
+                            "A3 = 10"
                     });
 
             checkHistory(new String[]
                     {
-                    "A3 = 10",
-                    "clear A1",            		
-                    "A2 = \"Test\"",
-                    "A1 = 5"
+                            "A3 = 10",
+                            "clear A1",
+                            "A2 = \"Test\"",
+                            "A1 = 5"
                     });
 
-            stopHistory();   	
+            stopHistory();
         }
 
         @Test
@@ -1952,36 +1950,36 @@ public class TestsALL
 
             executeCommands(new String[]
                     {
-                    "A1 = 5",
-                    "A2 = \"Test\"",
-                    "clear A1"
+                            "A1 = 5",
+                            "A2 = \"Test\"",
+                            "clear A1"
                     });
 
             checkHistory(new String[]
                     {
-                    "clear A1",
-                    "A2 = \"Test\"",
-                    "A1 = 5",
+                            "clear A1",
+                            "A2 = \"Test\"",
+                            "A1 = 5",
                     });
 
             executeCommands(new String[]
                     {
-                    "A1 = 6",
-                    "B1 = 7",
-                    "C1 = 8"
+                            "A1 = 6",
+                            "B1 = 7",
+                            "C1 = 8"
                     });
 
             checkHistory(new String[]
                     {
-                    "C1 = 8",
-                    "B1 = 7",
-                    "A1 = 6",
-                    "clear A1",
-                    "A2 = \"Test\"",
-                    "A1 = 5",
+                            "C1 = 8",
+                            "B1 = 7",
+                            "A1 = 6",
+                            "clear A1",
+                            "A2 = \"Test\"",
+                            "A1 = 5",
                     });
 
-            stopHistory();   	
+            stopHistory();
         }
 
         @Test
@@ -1991,49 +1989,49 @@ public class TestsALL
 
             executeCommands(new String[]
                     {
-                    "A1 = 10",
-                    "A2 = \"Test2\"",
-                    "clear A2"
+                            "A1 = 10",
+                            "A2 = \"Test2\"",
+                            "clear A2"
                     });
 
             checkHistory(new String[]
                     {
-                    "clear A2",
-                    "A2 = \"Test2\"",
-                    "A1 = 10",
+                            "clear A2",
+                            "A2 = \"Test2\"",
+                            "A1 = 10",
                     });
 
             executeCommands(new String[]
                     {
-                    "A1 = 60",
-                    "B1 = 70",
-                    "C1 = 80"
+                            "A1 = 60",
+                            "B1 = 70",
+                            "C1 = 80"
                     });
 
             checkHistory(new String[]
                     {
-                    "C1 = 80",
-                    "B1 = 70",
-                    "A1 = 60",
-                    "clear A2"
+                            "C1 = 80",
+                            "B1 = 70",
+                            "A1 = 60",
+                            "clear A2"
                     });
 
             executeCommands(new String[]
                     {
-                    "clear B1",
-                    "clear C1"
+                            "clear B1",
+                            "clear C1"
                     });
 
 
             checkHistory(new String[]
                     {
-                    "clear C1",
-                    "clear B1",
-                    "C1 = 80",
-                    "B1 = 70"
+                            "clear C1",
+                            "clear B1",
+                            "C1 = 80",
+                            "B1 = 70"
                     });
 
-            stopHistory();   	
+            stopHistory();
         }
 
         @Test
@@ -2043,98 +2041,98 @@ public class TestsALL
 
             executeCommands(new String[]
                     {
-                    "A1 = 8",
-                    "A2 = \"Test\"",
-                    "clear A1",
-                    "clear A2"
+                            "A1 = 8",
+                            "A2 = \"Test\"",
+                            "clear A1",
+                            "clear A2"
                     });
 
             checkHistory(new String[]
                     {
-                    "clear A2",
-                    "clear A1",
-                    "A2 = \"Test\"",
-                    "A1 = 8"			
+                            "clear A2",
+                            "clear A1",
+                            "A2 = \"Test\"",
+                            "A1 = 8"
                     });
 
             clearHistory(2);
 
             checkHistory(new String[]
                     {
-                    "clear A2",
-                    "clear A1",		
+                            "clear A2",
+                            "clear A1",
                     });
 
             clearHistory(1);
 
             checkHistory(new String[]
                     {
-                    "clear A2"		
+                            "clear A2"
                     });
 
             clearHistory(1);
 
-            checkHistory(new String[] 
+            checkHistory(new String[]
                     {
                     });
 
             executeCommands(new String[]
                     {
-                    "C1 = 8",
-                    "D2 = \"Test\"",
-                    "clear C1",
-                    "clear D2",
-                    "C1 = 20",
-                    "E1 = 40",
-                    "F3 = 60"
+                            "C1 = 8",
+                            "D2 = \"Test\"",
+                            "clear C1",
+                            "clear D2",
+                            "C1 = 20",
+                            "E1 = 40",
+                            "F3 = 60"
                     });
 
-            checkHistory(new String[] 
+            checkHistory(new String[]
                     {
-                    "F3 = 60",
-                    "E1 = 40",
-                    "C1 = 20",
-                    "clear D2",	
-                    "clear C1"	
+                            "F3 = 60",
+                            "E1 = 40",
+                            "C1 = 20",
+                            "clear D2",
+                            "clear C1"
                     });
 
             clearHistory(3);
 
-            checkHistory(new String[] 
+            checkHistory(new String[]
                     {
-                    "F3 = 60",
-                    "E1 = 40"	
+                            "F3 = 60",
+                            "E1 = 40"
                     });
 
             executeCommands(new String[]
                     {
-                    "A5 = 6",
-                    "A6 = 7",
-                    "A7 = 8",
-                    "A8 = 9"
+                            "A5 = 6",
+                            "A6 = 7",
+                            "A7 = 8",
+                            "A8 = 9"
                     });
 
-            checkHistory(new String[] 
+            checkHistory(new String[]
                     {
-                    "A8 = 9",
-                    "A7 = 8",
-                    "A6 = 7",
-                    "A5 = 6",
-                    "F3 = 60",
+                            "A8 = 9",
+                            "A7 = 8",
+                            "A6 = 7",
+                            "A5 = 6",
+                            "F3 = 60",
                     });
 
             clearHistory(2);
 
 
-            checkHistory(new String[] 
+            checkHistory(new String[]
                     {
-                    "A8 = 9",
-                    "A7 = 8",
-                    "A6 = 7"
+                            "A8 = 9",
+                            "A7 = 8",
+                            "A6 = 7"
                     });
 
             clearHistory(5);
-            checkHistory(new String[] 
+            checkHistory(new String[]
                     {
                     });
 
@@ -2182,7 +2180,7 @@ public class TestsALL
         }
 
         private void checkHistory(String[] expectedHistory)
-        {          	
+        {
             String historyDisplay = grid.processCommand("history display");
             if (historyDisplay.equals(""))
             {
@@ -2318,16 +2316,16 @@ public class TestsALL
             grid.processCommand("A2 = " + formula);
             assertEvalError(1, 0, formula, "empty ref error");
             grid.processCommand("A1 = 1");
-            assertEvalOK(1, 0, "1.0       ", formula, "valid ref");
+            assertEvalOK(1, 0, "1         ", formula, "valid ref");
             grid.processCommand("A1 = \"hello\"");
             assertEvalError(1, 0, formula, "string ref error");
             grid.processCommand("A1 = 2");
-            assertEvalOK(1, 0, "2.0       ", formula, "valid ref");
+            assertEvalOK(1, 0, "2         ", formula, "valid ref");
             // Removing following part.  It could also be a CommandFormat error
             //grid.processCommand("A1 = 11/20/2013");
             //assertEvalError(1, 0, formula, "date ref error");
             grid.processCommand("A1 = 3");
-            assertEvalOK(1, 0, "3.0       ", formula, "valid ref");
+            assertEvalOK(1, 0, "3         ", formula, "valid ref");
         }
 
         @Test
@@ -2390,7 +2388,7 @@ public class TestsALL
             String formula = "( 1 + 2 * 3 )";
             grid.processCommand("A1 = " + formula);
             String result = grid.getCell(new TestLocation(0, 0)).abbreviatedCellText();
-            assertEquals(formula, "7.0       ", result);
+            assertEquals(formula, "7         ", result);
         }
 
         @Test
@@ -2435,7 +2433,7 @@ public class TestsALL
         }
 
         @Test
-        public void testSortaHeterogeneous() 
+        public void testSortaHeterogeneous()
         {
             grid.processCommand("H14 = \"fiddle\"");
             grid.processCommand("I14 = \"arduous\"");
@@ -2467,14 +2465,14 @@ public class TestsALL
             // empty
             grid.processCommand("K19 = \"boo\"");
             // empty
-            
+
             grid.processCommand("SoRTA H14-L19");
 
-            String[] sortedVals = { "", "", "", "", "", "", "", "", "", "",  
-                                    "\"aardvark\"", "\"arduous\"", "\"azteca\"", "\"boo\"", "\"boos\"", "\"fiddle\"", "\"rara\"", "\"yaya\"", "\"zaza\"", "\"zazzaz\"",
-                                    "-190.1", "-13.2", "-0.02", "0.01", "1.01", "2.2", "19.2", "88.2", "607.1", "607.2" };
+            String[] sortedVals = { "", "", "", "", "", "", "", "", "", "",
+                    "\"aardvark\"", "\"arduous\"", "\"azteca\"", "\"boo\"", "\"boos\"", "\"fiddle\"", "\"rara\"", "\"yaya\"", "\"zaza\"", "\"zazzaz\"",
+                    "-190.1", "-13.2", "-0.02", "0.01", "1.01", "2.2", "19.2", "88.2", "607.1", "607.2" };
             int iSortedVals = 0;
-            
+
             for (int row = 13; row <= 18; row++)
             {
                 for (int col = 7; col <= 11; col++)
@@ -2482,6 +2480,6 @@ public class TestsALL
                     assertEquals("Inspecting cell " + getCellName(row, col), sortedVals[iSortedVals++], grid.getCell(new TestLocation(row,col)).fullCellText());
                 }
             }
-        }             
+        }
     }
 }

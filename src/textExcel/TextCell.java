@@ -6,7 +6,7 @@
  */
 package textExcel;
 
-public class TextCell implements Cell {
+public class TextCell implements Cell, Comparable<TextCell> {
 
     private String cellText;
 
@@ -16,11 +16,22 @@ public class TextCell implements Cell {
 
     @Override
     public String abbreviatedCellText() {
-        return String.format("%-10.10s", cellText);
+        return (cellText + "          ").substring(0,10);
     }
 
     @Override
     public String fullCellText() {
         return '"' + cellText + '"';
     }
+
+    // Return unformatted value
+    public String getFullStringValue() {
+        return cellText;
+    }
+
+    @Override
+    public int compareTo(TextCell o) {
+        return cellText.compareTo(o.getFullStringValue());
+    }
+
 }

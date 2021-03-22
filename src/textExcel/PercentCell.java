@@ -18,17 +18,24 @@ public class PercentCell extends ValueCell {
 
     @Override
     public double getDoubleValue() {
+        return Double.parseDouble(super.fullCellText().substring(0, super.fullCellText().length() - 1)) / 100;
+    }
+
+    // Keeps precision by methods that need percent value
+    public double getPercentValue() {
         return Double.parseDouble(super.fullCellText().substring(0, super.fullCellText().length() - 1));
     }
 
     @Override
     public String abbreviatedCellText() {
-        return String.format("%-10.10s", String.format("%.9s%%", (int) getDoubleValue() + ""));
+        // Add spaces, get 9 characters, remove extra spaces, add percent sign, add spaces, trim to 10 characters
+        // This ensures that the percent sign is where it needs to be
+        return (((int) (getPercentValue()) + "          ").substring(0, 9).trim() + "%         ").substring(0,10);
     }
 
     @Override
     public String fullCellText() {
-        return getDoubleValue() / 100 + "";
+        return getDoubleValue() + "";
     }
 
 }

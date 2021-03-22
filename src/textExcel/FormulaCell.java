@@ -38,7 +38,7 @@ public class FormulaCell extends RealCell {
 
         // Catch runtime errors
         try {
-            return String.format("%-10.10s", getDoubleValue() + "");
+            return (getDoubleValue() + "          ").substring(0, 10);
         } catch (ArithmeticException | IllegalStateException e) { // Thrown if bad calculation or bad cell reference
             return "#ERROR    ";
         }

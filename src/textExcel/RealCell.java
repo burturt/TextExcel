@@ -6,7 +6,7 @@
  */
 package textExcel;
 
-public abstract class RealCell implements Cell {
+public abstract class RealCell implements Cell, Comparable<RealCell> {
     private String value;
 
     public RealCell(String value) {
@@ -17,7 +17,7 @@ public abstract class RealCell implements Cell {
 
     @Override
     public String abbreviatedCellText() {
-        return String.format("%-10.10s", getDoubleValue() + "");
+        return (getDoubleValue() + "          ").substring(0, 10);
     }
 
     @Override
@@ -36,5 +36,17 @@ public abstract class RealCell implements Cell {
     // throws error if invalid, blocking construction. Can be overridden.
     public void testValid() {
         abbreviatedCellText();
+    }
+
+    @Override
+    public int compareTo(RealCell o) {
+        double value = getDoubleValue() - o.getDoubleValue();
+        if (value > 0) {
+            return 1;
+        } else if (value < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }
