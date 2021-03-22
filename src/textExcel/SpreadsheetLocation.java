@@ -2,7 +2,7 @@
  * Converts a cell identifier to row and column indexes
  *
  * @author Alec Machlis
- * @version March 16, 2021
+ * @version March 22, 2021
  */
 
 package textExcel;
@@ -12,24 +12,29 @@ package textExcel;
 public class SpreadsheetLocation implements Location {
     private int rowIndex;
     private int colIndex;
+
+    // Returns row index
     @Override
     public int getRow()
     {
         return rowIndex;
     }
 
+    // Returns column index
     @Override
     public int getCol()
     {
         return colIndex;
     }
 
+    // Returns location as raw cell name, like "B6"
     public String toString() {
         char colChar = (char) (colIndex + 'A');
         int row = rowIndex + 1;
         return "" + colChar + row;
     }
-    
+
+    // Constructor: parses cellName (max one letter + number) and stores indexes
     public SpreadsheetLocation(String cellName)
     {
         // Trim to prevent spaces getting in the way
@@ -57,6 +62,7 @@ public class SpreadsheetLocation implements Location {
         this.colIndex = colIndex;
     }
 
+    // Tests if 2 locations are equal. Good for ArrayList.contains()
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

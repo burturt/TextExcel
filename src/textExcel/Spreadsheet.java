@@ -2,7 +2,7 @@
  * Holds data for and processes actions on a spreadsheet/grid
  *
  * @author Alec Machlis
- * @version March 16, 2021
+ * @version March 22, 2021
  */
 
 package textExcel;
@@ -265,7 +265,7 @@ public class Spreadsheet implements Grid
 		return "";
 	}
 
-	// Process sortA command
+	// Process sort commands, given if ascending
 	public String commandSort(String command, boolean ascending) {
 
 		String arguments = command.substring(5).trim();
@@ -275,8 +275,7 @@ public class Spreadsheet implements Grid
 		for (SpreadsheetLocation loc : cellsOrder) {
 			cells.add(getCell(loc));
 		}
-		// Selection sort - find minimum, add to beginning, remove, rinse and repeat
-		// Sort textcells first
+		// Selection sort - find minimum, remove, add to beginning, rinse and repeat ignoring the last first cell added
 		for (int i = 0; i < cells.size(); i++) {
 			Cell extreme = cells.get(i);
 			for (int j = i; j < cells.size(); j++) {
@@ -306,7 +305,7 @@ public class Spreadsheet implements Grid
 		} else if (cell2 instanceof EmptyCell) {
 			return 1;
 		}
-		// If one but not both are TextCells, return textcell
+		// If one but not both are TextCells, return the text cell
 		if (cell1 instanceof TextCell && !(cell2 instanceof TextCell)) {
 			return -1;
 		} else if (cell2 instanceof TextCell && !(cell1 instanceof  TextCell)) {
@@ -342,7 +341,6 @@ public class Spreadsheet implements Grid
 	}
 
 	// Set cells given arraylist and cellrange
-	// Get spreadsheet locations from cell range
 	public void setCells(String cellRange, ArrayList<Cell> cells) {
 		String[] corners = cellRange.split("-");
 		if ( !(corners.length == 2) ) {
@@ -437,6 +435,8 @@ public class Spreadsheet implements Grid
 			}
 		}
 	}
+
+	// Returns nice view of spreadsheet values
 	public String toString() {
 		String formattedTable = "   |";
 		// Make table header

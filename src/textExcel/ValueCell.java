@@ -1,3 +1,9 @@
+/*
+ * Basic RealCell subclass that simply stores a single value
+ *
+ * @author Alec Machlis
+ * @version March 22, 2021
+ */
 package textExcel;
 
 public class ValueCell extends RealCell {

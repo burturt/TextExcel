@@ -2,20 +2,19 @@
  * Cell class that stores a percent and returns actual value, not percent value
  *
  * @author Alec Machlis
- * @version March 16, 2021
+ * @version March 22, 2021
  */
 package textExcel;
 
 public class PercentCell extends ValueCell {
+
+    // Store percent value
     public PercentCell(String percent) {
         super(percent);
         // Verify valid
-        abbreviatedCellText();
-        if (!percent.endsWith("%")) {
-            throw new IllegalArgumentException("Percents must end in a percent sign");
-        }
     }
 
+    // Returns actual decimal value
     @Override
     public double getDoubleValue() {
         return Double.parseDouble(super.fullCellText().substring(0, super.fullCellText().length() - 1)) / 100;
@@ -26,6 +25,7 @@ public class PercentCell extends ValueCell {
         return Double.parseDouble(super.fullCellText().substring(0, super.fullCellText().length() - 1));
     }
 
+    // Returns value as a string in percent form, rounded down
     @Override
     public String abbreviatedCellText() {
         // Add spaces, get 9 characters, remove extra spaces, add percent sign, add spaces, trim to 10 characters
@@ -33,9 +33,18 @@ public class PercentCell extends ValueCell {
         return (((int) (getPercentValue()) + "          ").substring(0, 9).trim() + "%         ").substring(0,10);
     }
 
+    // Returns full cell text of actual decimal value, no sign
     @Override
     public String fullCellText() {
         return getDoubleValue() + "";
+    }
+
+    // Tests that it can be printed and it ends in %
+    @Override
+    public void testValid() {
+        if (!this.abbreviatedCellText().trim().endsWith("%")) {
+            throw new IllegalArgumentException("Percents must end in a percent sign");
+        }
     }
 
 }

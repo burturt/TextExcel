@@ -29,6 +29,7 @@ public abstract class RealCell implements Cell, Comparable<RealCell> {
     public abstract double getDoubleValue();
 
     // Returns full actual unformatted value
+    // May sometimes not be the same as fullCellText
     public String getFullStringValue() {
         return fullCellText();
     }

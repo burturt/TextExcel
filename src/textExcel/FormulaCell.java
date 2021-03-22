@@ -2,7 +2,7 @@
  * Class that stores and evaluates a formula
  *
  * @author Alec Machlis
- * @version March 18, 2021
+ * @version March 22, 2021
  */
 package textExcel;
 
@@ -15,6 +15,7 @@ public class FormulaCell extends RealCell {
     // List of cells. Used to store list of cells when checking for circular references
     private ArrayList<Cell> upstreamCells;
 
+    // Stores formula, sets up operators ArrayList, and stores spreadsheet that cell is in so it can reference values
     public FormulaCell(String value, Spreadsheet spreadsheetData) {
         super(value);
 
@@ -28,7 +29,6 @@ public class FormulaCell extends RealCell {
 
         this.spreadsheetData = spreadsheetData;
     }
-
 
     // Returns calculated value or ERROR if error
     @Override
