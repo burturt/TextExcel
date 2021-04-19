@@ -11,7 +11,6 @@ public class PercentCell extends ValueCell {
     // Store percent value
     public PercentCell(String percent) {
         super(percent);
-        // Verify valid
     }
 
     // Returns actual decimal value
@@ -41,7 +40,7 @@ public class PercentCell extends ValueCell {
 
     // Tests that it can be printed and it ends in %
     @Override
-    public void testValid() {
+    public void validate() {
         if (!this.abbreviatedCellText().trim().endsWith("%")) {
             throw new IllegalArgumentException("Percents must end in a percent sign");
         }

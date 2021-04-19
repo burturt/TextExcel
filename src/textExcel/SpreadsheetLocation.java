@@ -7,8 +7,6 @@
 
 package textExcel;
 
-//Update this file with your own code.
-
 public class SpreadsheetLocation implements Location {
     private int rowIndex;
     private int colIndex;
@@ -56,7 +54,7 @@ public class SpreadsheetLocation implements Location {
         }
     }
 
-    // Overloaded constructor: allow creation location by index instead
+    // Overloaded constructor: allow creation location directly by index instead
     public SpreadsheetLocation(int rowIndex, int colIndex) {
         this.rowIndex = rowIndex;
         this.colIndex = colIndex;

@@ -11,23 +11,17 @@ import java.util.ArrayList;
 public class FormulaCell extends RealCell {
 
     private ArrayList<String> operators;
-    private Spreadsheet spreadsheetData;
-    // List of cells. Used to store list of cells when checking for circular references
+    private Spreadsheet parentSpreadsheet;
+    // List of cells. Used to store list of already-called cells when checking for circular references
     private ArrayList<Cell> upstreamCells;
 
     // Stores formula, sets up operators ArrayList, and stores spreadsheet that cell is in so it can reference values
-    public FormulaCell(String value, Spreadsheet spreadsheetData) {
+    public FormulaCell(String value, Spreadsheet parentSpreadsheet) {
         super(value);
 
-        operators = new ArrayList<>();
-        operators.add("+");
-        operators.add("-");
-        operators.add("*");
-        operators.add("/");
         upstreamCells = new ArrayList<>();
 
-
-        this.spreadsheetData = spreadsheetData;
+        this.parentSpreadsheet = parentSpreadsheet;
     }
 
     // Returns calculated value or ERROR if error
@@ -118,6 +112,7 @@ public class FormulaCell extends RealCell {
     }
 
     // Calculates and returns actual unformatted full value
+    // Allows FormulaCell to send an #ERROR value instead of a double if necessary but not truncate double like abbreviatedCellText
     public String getFullStringValue() {
         try {
             return getDoubleValue() + "";
@@ -174,7 +169,7 @@ public class FormulaCell extends RealCell {
 
     // Parses and returns value of cell given name. If not a cell, throws an IllegalArgumentException
     public double parseCell(String cellName) {
-        Cell cell = spreadsheetData.getCell(new SpreadsheetLocation(cellName));
+        Cell cell = parentSpreadsheet.getCell(new SpreadsheetLocation(cellName));
         if ( !(cell instanceof RealCell) ) {
             throw new IllegalStateException("Referenced cell does not have a valid value.");
         }
@@ -216,14 +211,14 @@ public class FormulaCell extends RealCell {
     }
 
     // Sets up test info and tests for pattern of alternating cells and numbers.
-    public void testValid() {
+    public void validate() {
         // Assign dummy spreadsheet if a spreadsheet doesn't already exist
-        if (spreadsheetData == null) {
-            spreadsheetData = new Spreadsheet();
+        if (parentSpreadsheet == null) {
+            parentSpreadsheet = new Spreadsheet();
             // Fill spreadsheet with temporary random real value to prevent premature test stopping
-            for (int i = 0; i < spreadsheetData.getRows(); i++) {
-                for (int j = 0; j < spreadsheetData.getCols(); j++) {
-                    spreadsheetData.setCell(new ValueCell(Math.random() + 1 + ""), i, j);
+            for (int i = 0; i < parentSpreadsheet.getRows(); i++) {
+                for (int j = 0; j < parentSpreadsheet.getCols(); j++) {
+                    parentSpreadsheet.setCell(new ValueCell(Math.random() + 1 + ""), i, j);
                 }
             }
         }

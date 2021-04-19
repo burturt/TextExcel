@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class TextExcel
 {
-	private static final String version = "4.1";
+	private static final String version = "5.0";
 	public static void main(String[] args)
 	{
 	    System.out.println("Welcome to TextExcel v" + version + " by Alec Machlis!");

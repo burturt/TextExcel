@@ -32,7 +32,7 @@ public class Spreadsheet implements Grid
 			{"<text>", "\"<text>\"", "Plain text cell - can store anything", "Cell that simply holds a text value. Cannot do computations. Indicate text by surrounding with quotes"},
 			{"<value>", "<value>", "Plain numerical value", "Stores a number, can be a decimal. Can be used in computations"},
 			{"<perc>", "<perc>%", "Percent value", "Stores a percent of something. Stored as decimal, printed as percentage."},
-			{"<formula>","( <formula> )", "Mathematical formula", "A mathematical formula that is either arithmetic or a range function.\n\t\tArithmetic: Can use +, -, *, / combined with numbers and cell references. Evaluates left-to-right.\n\t\tRange function: Can be either 'sum' or 'svg' with nothing else in it. See 'help avg' or 'help sum' for info about the 2 functions.\n\t\tOperators and functions MUST be separated by spaces."},
+			{"<formula>","( <formula> )", "Mathematical formula", "A mathematical formula that is either arithmetic or a range function.\n\t\tArithmetic: Can use +, -, *, / combined with numbers and cell references. Respects order of operations.\n\t\tRange function: Can be either 'sum' or 'svg' with nothing else in it. See 'help avg' or 'help sum' for info about the 2 functions.\n\t\tOperators and functions MUST be separated by spaces. Does not support parenthesis grouping."},
 			{"avg", "avg <cell>-<cell>", "Calculate average in formula", "Given a range of cells, calculates the average value of all value, percent, and other formula cells."},
 			{"sum", "sum <cell>-<cell>", "Calculates sum in formula", "Given a range of cells, calculates the sum of all value, percentage, and other formula cells"}
 	};
@@ -61,6 +61,11 @@ public class Spreadsheet implements Grid
 	// Set cell given x/y location index
 	public void setCell(Cell cell, int row, int col) {
 		sheet[row][col] = cell;
+	}
+
+	// Overload to accept SpreadSheetLocation
+	public void setCell(Cell cell, SpreadsheetLocation loc) {
+		setCell(cell, loc.getRow(), loc.getCol());
 	}
 
 	// Master method to process raw command input
@@ -100,7 +105,7 @@ public class Spreadsheet implements Grid
 			} else if (command.toLowerCase().charAt(4) == 'd') {
 				return commandSort(command, false);
 			} else {
-				return "ERROR: invalid command";
+				return "ERROR: invalid sort command";
 			}
 		}
 		// Process cell assignment commands
@@ -181,7 +186,7 @@ public class Spreadsheet implements Grid
 		} catch (Exception e) {
 			return "ERROR: assignment expression is invalid: " + e;
 		}
-		sheet[cellLoc.getRow()][cellLoc.getCol()] = newCell;
+		setCell(newCell, cellLoc);
 		return toString();
 	}
 
@@ -297,7 +302,7 @@ public class Spreadsheet implements Grid
 	}
 
 	// Compare 2 cells after verifying type
-	public int compareCells(Cell cell1, Cell cell2) {
+	public static int compareCells(Cell cell1, Cell cell2) {
 
 		// Empty Cells always come first
 		if (cell1 instanceof EmptyCell) {
@@ -407,10 +412,14 @@ public class Spreadsheet implements Grid
 		String[] helpArgument = command.toLowerCase().split(" ");
 		if (helpArgument.length != 1) {
 			command = helpArgument[1].toLowerCase();
-			// Find command in commands array that matches command and if match, print and return
-			for (String[] tempCommandInfo : commands) {
-				if (command.startsWith(tempCommandInfo[0])) {
-					return '\t' + tempCommandInfo[1] + "\n\t\t" + tempCommandInfo[2] + "\n\t\t" + tempCommandInfo[3];
+			// If `----------` don't print out a bunch of dashes
+			if (!command.equals("----------")) {
+
+				// Find command in commands array that matches command and if match, print and return
+				for (String[] tempCommandInfo : commands) {
+					if (command.startsWith(tempCommandInfo[0])) {
+						return '\t' + tempCommandInfo[1] + "\n\t\t" + tempCommandInfo[2] + "\n\t\t" + tempCommandInfo[3];
+					}
 				}
 			}
 			System.out.println("Invalid argument.");
