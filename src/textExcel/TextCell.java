@@ -2,7 +2,7 @@
  * Class that stores raw text
  *
  * @author Alec Machlis
- * @version March 22, 2021
+ * @version April 22, 2021
  */
 package textExcel;
 

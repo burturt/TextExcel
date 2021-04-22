@@ -2,7 +2,7 @@
  * Creates instance of Spreadsheet, reads and runs commands, prints info to use
  *
  * @author Alec Machlis
- * @version March 11, 2021
+ * @version April 22, 2021
  */
 package textExcel;
 

@@ -2,7 +2,7 @@
  * Abstract class that evaluates to a numerical value
  *
  * @author Alec Machlis
- * @version April 12, 2021
+ * @version April 22, 2021
  */
 package textExcel;
 

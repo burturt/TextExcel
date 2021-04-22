@@ -2,7 +2,7 @@
  * Represents an empty cell. Holds no value and returns an empty string.
  *
  * @author Alec Machlis
- * @version March 22, 2021
+ * @version April 22, 2021
  */
 package textExcel;
 

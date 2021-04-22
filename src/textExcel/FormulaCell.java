@@ -2,7 +2,7 @@
  * Class that stores and evaluates a formula
  *
  * @author Alec Machlis
- * @version March 22, 2021
+ * @version April 22, 2021
  */
 package textExcel;
 
@@ -253,7 +253,8 @@ public class FormulaCell extends RealCell {
         return sum;
     }
 
-    // Get count of cells in cell range
+    // Get count of cells in cell range - does not distinguish between different cell types including empty
+
     public double getCellRangeCount(String range) {
         String[] corners = range.split("-");
         if ( !(corners.length == 2) ) {

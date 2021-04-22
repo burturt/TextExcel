@@ -2,7 +2,7 @@
  * Converts a cell identifier to row and column indexes
  *
  * @author Alec Machlis
- * @version March 22, 2021
+ * @version April 22, 2021
  */
 
 package textExcel;
